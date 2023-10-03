@@ -38,8 +38,8 @@ jobs:
         run: bash ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/download-artifact@v3
         with:
           name: apk
-          path: /
+
 
