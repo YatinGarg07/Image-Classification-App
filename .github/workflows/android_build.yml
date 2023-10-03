@@ -23,7 +23,6 @@ jobs:
 
   apk:
     name: Generate APK
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
