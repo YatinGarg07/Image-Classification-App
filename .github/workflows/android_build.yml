@@ -1,43 +1,33 @@
-name: Android Build
+name: Build & Publish Release APK
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - '*'
 
 jobs:
-  build:
-
-    name: Generate APK
+  Gradle:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: checkout code
+        uses: actions/checkout@v2
 
-      - name: Set Up JDK
+      - name: Setup JDK
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Change wrapper permissions
+      - name: Make Gradle executable
         run: chmod +x ./gradlew
-
-      # Run Build Project
-      - name: Build gradle project
-        run: ./gradlew build
-
-      # Create APK Debug
-      - name: Build apk debug project (APK) - ${{ env.main_project_module }} module
-        run: ./gradlew assembleDebug
-
-
-      # Upload Artifact Build
-      # Noted For Output [main_project_module]/build/outputs/apk/debug/
-      - name: Upload APK Debug - ${{ env.repository_name }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.date_today }} - ${{ env.repository_name }} - APK(s) debug generated
-          path: ${{ env.main_project_module }}/apk/
-
-
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+      - name: Releasing using Hub
+        uses: VladDaniliuk/action-release-releaseapk@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          VERSION_VARIABLE: v0.0.1
+          APP_FILE: buildSrc/Android.kt
+          APP_FOLDER: ./app/release/app.apk
+          CHANGELOG_FILE: ./CHANGELOG.md
+          RELEASE_TITLE: New Build
+          NAME_VARIABLE: app-release.apk
