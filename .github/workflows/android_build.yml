@@ -20,7 +20,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build Demo APK
-        run: ./gradlew assembleDemo  
+        run: ./gradlew assembleDebug
 
       - name: Upload APK to Github Actions
         if: always()
