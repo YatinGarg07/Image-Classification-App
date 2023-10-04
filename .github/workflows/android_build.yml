@@ -19,18 +19,16 @@ jobs:
       - name: Make Gradle executable
         run: chmod +x ./gradlew
 
-      - name: Generate AAR and APK files
-        if: always()
-        run: ./gradlew assembleDebug
+      - name: Build Demo APK
+        run: ./gradlew assembleDemo  
 
-      - name: Upload AAR files
+      - name: Upload APK to Github Actions
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-           name: artifacts.zip
+           name: final-output.apk
            path: |
               app/build/outputs/apk/debug/app-debug.apk
-              dog_network/build/outputs/aar
 
       - name: Releasing using Hub
         uses: kyze8439690/action-release-releaseapk@master
